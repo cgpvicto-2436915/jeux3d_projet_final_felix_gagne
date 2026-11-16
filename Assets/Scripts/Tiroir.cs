@@ -1,3 +1,5 @@
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
@@ -10,7 +12,17 @@ public class Tiroir : MonoBehaviour
     [SerializeField]
     private Animator animateur;
 
+    private float distanceOuverture = 2.5f;
+
+    [SerializeField]
+    private GameObject interagir;
+
+    [SerializeField]
+    private Camera cam;
+
     private bool ouvert;
+
+    private ControleurJeu controleurJeu;
 
     [SerializeField]
     private PlayerInput controles;
@@ -20,18 +32,54 @@ public class Tiroir : MonoBehaviour
         InputAction actionInteragir = controles.actions.FindAction("player/Interagir");
         actionInteragir.performed += OuvrirFermerTiroir;
         ouvert = false;
+
+        
     }
 
     private void OnDestroy()
     {
         if(controles == null) { return; }
         InputAction actionInteragir = controles.actions.FindAction("player/Interagir");
-        actionInteragir.performed += OuvrirFermerTiroir;
+        actionInteragir.performed -= OuvrirFermerTiroir;
+    }
+
+    private void Update()
+    {
+        float distanceJoueur = Vector3.Distance(this.gameObject.transform.position, joueur.position);
+        if (distanceJoueur < distanceOuverture) {
+            interagir.SetActive(true);
+        }
+        else
+        {
+            interagir.SetActive(false);
+        }
+
     }
 
     private void OuvrirFermerTiroir(InputAction.CallbackContext contexte)
     {
-        ouvert = !ouvert;
-        animateur.SetBool("Ouvert", ouvert);
+
+        //Code de raycast provient des notes de cours
+
+        Vector2 positionSouris = Mouse.current.position.ReadValue();
+        Ray rayon = cam.ScreenPointToRay(positionSouris);
+
+        if (Physics.Raycast(rayon, out RaycastHit infoRaycast, Mathf.Infinity))
+        {
+
+            if (infoRaycast.collider.gameObject == this.gameObject)
+            {
+                float distanceJoueur = Vector3.Distance(this.gameObject.transform.position,joueur.position);
+                if (distanceJoueur < distanceOuverture)
+                {
+
+                    ouvert = !ouvert;
+                    animateur.SetBool("Ouvert", ouvert);
+                }
+
+            }
+        }
+
+
     }
 }
