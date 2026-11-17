@@ -36,8 +36,8 @@ public class Joueur : MonoBehaviour
     private void Start()
     {
         //https://gamedevbeginner.com/how-to-lock-hide-the-cursor-in-unity/
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        //Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.visible = false;
 
         rb = GetComponent<Rigidbody>(); 
         InputAction action = controles.actions.FindAction("player/deplacement");

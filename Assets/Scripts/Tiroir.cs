@@ -1,8 +1,7 @@
-using Unity.VisualScripting;
-using UnityEditor;
+using TMPro;
+
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Rendering;
 
 public class Tiroir : MonoBehaviour
 {
@@ -11,6 +10,9 @@ public class Tiroir : MonoBehaviour
 
     [SerializeField]
     private Animator animateur;
+
+    [SerializeField]
+    private TextMeshProUGUI AffichageCode;
 
     private float distanceOuverture = 2.5f;
 
@@ -22,8 +24,6 @@ public class Tiroir : MonoBehaviour
 
     private bool ouvert;
 
-    private ControleurJeu controleurJeu;
-
     [SerializeField]
     private PlayerInput controles;
 
@@ -31,8 +31,11 @@ public class Tiroir : MonoBehaviour
     {
         InputAction actionInteragir = controles.actions.FindAction("player/Interagir");
         actionInteragir.performed += OuvrirFermerTiroir;
+
         ouvert = false;
 
+        string code = ControleurJeu.Instance.CodePorteSortie;
+        AffichageCode.SetText(code[0] + " " +code[1] + " _ _ _ _");
         
     }
 
