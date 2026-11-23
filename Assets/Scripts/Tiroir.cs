@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Tiroir : MonoBehaviour
+public class Tiroir : MonoBehaviour, IInteragir
 {
     [SerializeField]
     private Transform joueur;
@@ -14,6 +14,7 @@ public class Tiroir : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI AffichageCode;
 
+    [SerializeField]
     private float distanceOuverture = 2.5f;
 
     [SerializeField]
@@ -29,8 +30,6 @@ public class Tiroir : MonoBehaviour
 
     private void Start()
     {
-        InputAction actionInteragir = controles.actions.FindAction("player/Interagir");
-        actionInteragir.performed += OuvrirFermerTiroir;
 
         ouvert = false;
 
@@ -42,8 +41,6 @@ public class Tiroir : MonoBehaviour
     private void OnDestroy()
     {
         if(controles == null) { return; }
-        InputAction actionInteragir = controles.actions.FindAction("player/Interagir");
-        actionInteragir.performed -= OuvrirFermerTiroir;
     }
 
     private void Update()
@@ -59,30 +56,10 @@ public class Tiroir : MonoBehaviour
 
     }
 
-    private void OuvrirFermerTiroir(InputAction.CallbackContext contexte)
+    public void Interagir()
     {
-
-        //Code de raycast provient des notes de cours
-
-        Vector2 positionSouris = Mouse.current.position.ReadValue();
-        Ray rayon = cam.ScreenPointToRay(positionSouris);
-
-        if (Physics.Raycast(rayon, out RaycastHit infoRaycast, Mathf.Infinity))
-        {
-
-            if (infoRaycast.collider.gameObject == this.gameObject)
-            {
-                float distanceJoueur = Vector3.Distance(this.gameObject.transform.position,joueur.position);
-                if (distanceJoueur < distanceOuverture)
-                {
-
-                    ouvert = !ouvert;
-                    animateur.SetBool("Ouvert", ouvert);
-                }
-
-            }
-        }
-
-
+        ouvert = !ouvert;
+        animateur.SetBool("Ouvert", ouvert);
     }
+
 }

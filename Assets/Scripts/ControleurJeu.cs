@@ -9,6 +9,9 @@ public class ControleurJeu : MonoBehaviour
     [field: SerializeField]
     public PlayerInput Controles { get; private set; }
 
+    [field: SerializeField]
+    public Joueur Joueur { get; private set; }
+
     public string CodePorteSortie { get; private set; }
 
     private void Awake()

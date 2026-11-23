@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5622759062949048456}
+  - component: {fileID: 7784280626457622056}
   m_Layer: 0
   m_Name: Interagir2
   m_TagString: Untagged
@@ -25,13 +26,27 @@ Transform:
   m_GameObject: {fileID: 8791536715347867539}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.24205005, y: 0.3769107, z: -5.0078297}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4184667428122849392}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7784280626457622056
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8791536715347867539}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0f430fd626a2a94baefe0e4f093e938, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::IconeInteragir
+  interagir: {fileID: 5264497075881467050}
+  distance: 2.5
 --- !u!1001 &3309017393017439217
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -82,7 +97,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1727430708563817345, guid: b42b4ac73b440dc43a6ffa7c80e385f3, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 5.0078297
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1727430708563817345, guid: b42b4ac73b440dc43a6ffa7c80e385f3, type: 3}
       propertyPath: m_LocalRotation.w
@@ -102,11 +117,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1727430708563817345, guid: b42b4ac73b440dc43a6ffa7c80e385f3, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -0.08705005
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1727430708563817345, guid: b42b4ac73b440dc43a6ffa7c80e385f3, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.13591069
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1727430708563817345, guid: b42b4ac73b440dc43a6ffa7c80e385f3, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -140,5 +155,10 @@ PrefabInstance:
 --- !u!224 &4184667428122849392 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1727430708563817345, guid: b42b4ac73b440dc43a6ffa7c80e385f3, type: 3}
+  m_PrefabInstance: {fileID: 3309017393017439217}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &5264497075881467050 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7270144587616460635, guid: b42b4ac73b440dc43a6ffa7c80e385f3, type: 3}
   m_PrefabInstance: {fileID: 3309017393017439217}
   m_PrefabAsset: {fileID: 0}

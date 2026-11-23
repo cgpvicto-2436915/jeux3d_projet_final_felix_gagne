@@ -1,8 +1,11 @@
+using System;
 using System.Collections;
 using TMPro;
+using Unity.Jobs;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
-public class ClavierCode : MonoBehaviour
+public class ClavierCode : MonoBehaviour, IInteragir
 {
     private string codeSaisi;
 
@@ -15,13 +18,29 @@ public class ClavierCode : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI texteCode;
 
+    [SerializeField]
+    private Joueur joueur;
+
+    [SerializeField]
+    private Porte porte;
+
     private void Start()
     {
+        ui.gameObject.SetActive(false);
         bonCode = ControleurJeu.Instance.CodePorteSortie;
         codeSaisi = "";
         AfficherCode();
         verrouiller = false;
     }
+
+    private void OnDestroy()
+    {
+        if(ControleurJeu.Instance == null)
+        {
+            return;
+        }
+    }
+
 
     public void AfficherCode()
     {
@@ -89,13 +108,17 @@ public class ClavierCode : MonoBehaviour
     {
         texteCode.color = Color.green;
         yield return new WaitForSeconds(1f);
-        ui.gameObject.SetActive(false);
+        fermer();
+        yield return new WaitForSeconds(1f);
+        porte.Ouvrir();
+
     }
 
     public void fermer()
     {
         codeSaisi = "";
         ui.gameObject.SetActive(false);
+        joueur.ModeUi = false;
     }
 
     public void Supprimer()
@@ -103,5 +126,13 @@ public class ClavierCode : MonoBehaviour
         if (verrouiller) { return; }
         codeSaisi = "";
         AfficherCode();
+        
+    }
+
+    public void Interagir()
+    {
+        ui.gameObject.SetActive(true);
+        AfficherCode();
+        joueur.ModeUi = true;
     }
 }

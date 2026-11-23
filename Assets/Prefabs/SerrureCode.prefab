@@ -1103,8 +1103,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 2.2567627, y: 2.0138566, z: 1.6149825}
+  m_Center: {x: -0.017700482, y: -0.111050546, z: 0.30749056}
 --- !u!114 &2105576915038326041
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1119,6 +1119,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ClavierCode
   ui: {fileID: 3772704616213421073}
   texteCode: {fileID: 3161019500764552731}
+  distanceOuverture: 2.5
+  cam: {fileID: 0}
+  positionJoueur: {fileID: 0}
 --- !u!1001 &926649499925347336
 PrefabInstance:
   m_ObjectHideFlags: 0

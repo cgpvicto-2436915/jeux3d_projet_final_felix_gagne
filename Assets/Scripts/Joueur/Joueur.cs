@@ -1,3 +1,4 @@
+using System;
 using System.Xml.Serialization;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -13,6 +14,15 @@ public class Joueur : MonoBehaviour
     [SerializeField]
     private PlayerInput controles;
 
+    [SerializeField]
+    private GameObject cible;
+
+    [SerializeField]
+    private GameObject cameraChambre;
+    
+    [SerializeField]
+    private GameObject cameraJoueur;
+
     /// <summary>
     /// Le deplacement actuel
     /// </summary>
@@ -27,40 +37,94 @@ public class Joueur : MonoBehaviour
 
     private float rotationVerticale;
 
+    [SerializeField]
+    private Camera cam;
+
+    [SerializeField]
+    private float distanceInteraction;
+
+    public bool ModeUi { get; set; }
+    public bool ModeCamera { get; set; }
+
+    public event Action activerCamera;
+
     /// <summary>
     /// Le position de l'objet qui fait la tete
     /// </summary>
     [SerializeField]
     private Transform tete;
 
+    private EtatJoueur etatPrecedent;
+    private EtatJoueur prochainEtat;
+
     private void Start()
     {
-        //https://gamedevbeginner.com/how-to-lock-hide-the-cursor-in-unity/
-        //Cursor.lockState = CursorLockMode.Locked;
-        //Cursor.visible = false;
+        ModeCamera = false;
+        ModeUi = false;
+        etatPrecedent = null;
+        prochainEtat = new EtatDeplacement();
 
-        rb = GetComponent<Rigidbody>(); 
+    }
+
+    public void ActiverCamera()
+    {
+        activerCamera?.Invoke();
+        Debug.Log("Activer camera");
+    }
+    public void PouvoirBouger()
+    {
+        //https://gamedevbeginner.com/how-to-lock-hide-the-cursor-in-unity/
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        rb = GetComponent<Rigidbody>();
         InputAction action = controles.actions.FindAction("player/deplacement");
         action.performed += DebutDeplacement;
         action.canceled += FinDeplacement;
 
         InputAction actionRotation = controles.actions.FindAction("player/Regarder");
         actionRotation.performed += DebutRotation;
+        cible.SetActive(true);
 
+        InputAction actionInteragir = ControleurJeu.Instance.Controles.actions.FindAction("player/Interagir");
+        actionInteragir.performed += Interagir;
     }
 
-    private void FixedUpdate()
+    public void Interagir(InputAction.CallbackContext contexte)
     {
-        Deplacer();
+        //Code de raycast inspiré des notes de cours
+        Vector2 positionSouris = Mouse.current.position.ReadValue();
+        Ray rayon = cam.ScreenPointToRay(positionSouris);
+
+        if (Physics.Raycast(rayon, out RaycastHit infoRaycast, Mathf.Infinity))
+        {
+
+            Vector3 positionObjet = infoRaycast.collider.transform.position; 
+            float distanceObjet = Vector3.Distance(this.gameObject.transform.position, positionObjet);
+
+            if (distanceObjet < distanceInteraction)
+            {
+
+                IInteragir script = infoRaycast.collider.gameObject.GetComponent<IInteragir>();
+
+                if(script != null)
+                {
+
+                    script.Interagir();
+                }
+                    
+            }
+
+        }
     }
 
-    private void Update()
+    public void ArreterPouvoirBouger()
     {
-        Tourner();
-    }
 
-    private void OnDestroy()
-    {
+        //https://gamedevbeginner.com/how-to-lock-hide-the-cursor-in-unity/
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        deplacement = Vector2.zero;
         if (controles == null || controles.actions == null) { return; }
 
         InputAction action = controles.actions.FindAction("player/deplacement");
@@ -69,8 +133,63 @@ public class Joueur : MonoBehaviour
 
         InputAction actionRotation = controles.actions.FindAction("player/Regarder");
         actionRotation.performed -= DebutRotation;
+        cible.SetActive(false);
+
+        InputAction actionInteragir = ControleurJeu.Instance.Controles.actions.FindAction("player/Interagir");
+        actionInteragir.performed -= Interagir;
+    }
+
+    public void TransformerEnCamera()
+    {
+        cameraChambre.SetActive(true);
+        cameraJoueur.SetActive(false);
+        InputAction action = controles.actions.FindAction("player/deplacement");
+        action.performed -= TournerModeCamera;
+
 
     }
+    public void QuitterCamera()
+    {
+        cameraJoueur.SetActive(true);
+        cameraChambre.SetActive(false);
+
+    }
+
+    private void FixedUpdate()
+    {
+        Deplacer();
+        
+    }
+
+    private void Update()
+    {
+        if(etatPrecedent != prochainEtat)
+        {
+            prochainEtat.OnEnter(this);
+        }
+        etatPrecedent = prochainEtat;
+        prochainEtat = prochainEtat.OnExecuter(this);
+
+        if (etatPrecedent != prochainEtat) 
+        {
+            etatPrecedent.OnSortir(this);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        ArreterPouvoirBouger();
+
+    }
+    #region rotationCamera
+
+    private void TournerModeCamera(InputAction.CallbackContext contexte)
+    {
+        rotation = contexte.ReadValue<Vector2>();
+    }
+
+    #endregion
+
     #region deplacement
     //Inspirer du deplacement de la cible camera dans les notes de cours.
 
@@ -95,7 +214,7 @@ public class Joueur : MonoBehaviour
     /// <summary>
     /// Gère le déplacement du joueur selon l'input du joueur
     /// </summary>
-    private void Deplacer()
+    public void Deplacer()
     {
         if (deplacement.sqrMagnitude > 0.0f)
         {
@@ -127,7 +246,7 @@ public class Joueur : MonoBehaviour
     /// <summary>
     /// Gere la rotation de la camera selon la position de la souris
     /// </summary>
-    private void Tourner()
+    public void Tourner()
     {
         float rotationHorizon = rotation.x * vitesseRotation * Time.deltaTime;
         float rotationSourisVerticale = rotation.y * vitesseRotation * Time.deltaTime;
