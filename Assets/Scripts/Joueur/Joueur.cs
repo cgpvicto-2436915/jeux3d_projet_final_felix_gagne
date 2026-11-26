@@ -60,9 +60,9 @@ public class Joueur : MonoBehaviour
     private void Start()
     {
         ModeCamera = false;
-        ModeUi = false;
+        ModeUi = true;
         etatPrecedent = null;
-        prochainEtat = new EtatDeplacement();
+        prochainEtat = new EtatUi();
 
     }
 

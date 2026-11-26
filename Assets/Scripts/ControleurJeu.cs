@@ -18,7 +18,7 @@ public class ControleurJeu : MonoBehaviour
     {
         for(int i = 0;i<6; i++)
         {
-            CodePorteSortie += Random.Range(0,10).ToString();
+            CodePorteSortie += Random.Range(1,10).ToString();
         }
         Debug.Log(CodePorteSortie);
 
