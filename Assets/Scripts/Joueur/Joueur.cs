@@ -42,11 +42,16 @@ public class Joueur : MonoBehaviour
 
     [SerializeField]
     private float distanceInteraction;
+    [SerializeField]
+    private AudioSource audioPas;
 
     public bool ModeUi { get; set; }
     public bool ModeCamera { get; set; }
 
     public event Action activerCamera;
+    
+    [SerializeField]
+    public Musique musique;
 
     /// <summary>
     /// Le position de l'objet qui fait la tete
@@ -143,8 +148,6 @@ public class Joueur : MonoBehaviour
     {
         cameraChambre.SetActive(true);
         cameraJoueur.SetActive(false);
-        InputAction action = controles.actions.FindAction("player/deplacement");
-        action.performed -= TournerModeCamera;
 
 
     }
@@ -181,15 +184,6 @@ public class Joueur : MonoBehaviour
         ArreterPouvoirBouger();
 
     }
-    #region rotationCamera
-
-    private void TournerModeCamera(InputAction.CallbackContext contexte)
-    {
-        rotation = contexte.ReadValue<Vector2>();
-    }
-
-    #endregion
-
     #region deplacement
     //Inspirer du deplacement de la cible camera dans les notes de cours.
 
@@ -200,6 +194,7 @@ public class Joueur : MonoBehaviour
     private void DebutDeplacement(InputAction.CallbackContext contexte)
     {
         deplacement = vitesseDeplacement * contexte.ReadValue<Vector2>().normalized;
+        audioPas.Play();
     }
 
     /// <summary>
@@ -209,6 +204,7 @@ public class Joueur : MonoBehaviour
     private void FinDeplacement(InputAction.CallbackContext contexte)
     {
         deplacement = Vector2.zero;
+        audioPas.Stop();
     }
 
     /// <summary>

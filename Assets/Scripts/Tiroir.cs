@@ -13,6 +13,8 @@ public class Tiroir : MonoBehaviour, IInteragir
 
     [SerializeField]
     private Camera cam;
+    [SerializeField]
+    private AudioSource audioTirroir;
 
     private bool ouvert;
 
@@ -37,6 +39,7 @@ public class Tiroir : MonoBehaviour, IInteragir
     public void Interagir()
     {
         ouvert = !ouvert;
+        audioTirroir.Play();
         animateur.SetBool("Ouvert", ouvert);
     }
 

@@ -24,6 +24,11 @@ public class ClavierCode : MonoBehaviour, IInteragir
     [SerializeField]
     private Porte porte;
 
+    [SerializeField]
+    private AudioSource audioBip;
+    [SerializeField]
+    private AudioSource audioAccess;
+
     private void Start()
     {
         ui.gameObject.SetActive(false);
@@ -66,6 +71,10 @@ public class ClavierCode : MonoBehaviour, IInteragir
 
     public void AjouterChiffre(string chiffre)
     {
+        audioBip.time = 0.3f;
+        audioBip.Play();
+
+
         if (verrouiller) { return; }
 
         if (codeSaisi.Length <bonCode.Length)
@@ -77,7 +86,9 @@ public class ClavierCode : MonoBehaviour, IInteragir
     }
     public void Valider()
     {
-        verrouiller=true;
+        audioBip.time = 0.3f;
+        audioBip.Play();
+        verrouiller =true;
         if(codeSaisi == bonCode)
         { 
             
@@ -96,6 +107,7 @@ public class ClavierCode : MonoBehaviour, IInteragir
         {
             codeSaisi = "";
             texteCode.SetText("ERREUR!");
+
             yield return new WaitForSeconds(0.75f);
             texteCode.SetText("");
             yield return new WaitForSeconds(0.75f);
@@ -109,8 +121,10 @@ public class ClavierCode : MonoBehaviour, IInteragir
         texteCode.color = Color.green;
         yield return new WaitForSeconds(1f);
         fermer();
+        audioAccess.Play();
         yield return new WaitForSeconds(1f);
         porte.Ouvrir();
+        ControleurJeu.Instance.Joueur.musique.victoire();
 
     }
 
@@ -123,6 +137,8 @@ public class ClavierCode : MonoBehaviour, IInteragir
 
     public void Supprimer()
     {
+        audioBip.time = 0.3f;
+        audioBip.Play();
         if (verrouiller) { return; }
         codeSaisi = "";
         AfficherCode();

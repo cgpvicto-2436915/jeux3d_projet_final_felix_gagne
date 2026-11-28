@@ -29,6 +29,7 @@ public class Menus : MonoBehaviour
     public void Jouer()
     {
         ControleurJeu.Instance.Joueur.ModeUi = false;
+        ControleurJeu.Instance.EnJeu = true;
         this.gameObject.SetActive(false);
     }
 }
